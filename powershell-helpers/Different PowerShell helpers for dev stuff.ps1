@@ -17,6 +17,10 @@ foreach ($depType in $depTypes) {
     $curVerNum = $dep.Value -replace '^([^\d]*)', ''
     Write-Host ""
     Write-Host "$($dep.Name)"
+    if ($curVerNum -eq $getLatestStableVersion -and $curVerNum -eq $getLatestVersion) {
+      Write-Host "`tCurrent Version '$curVerNum' already matches the latest *STABLE* and *PRE-RELEASE* version"
+      continue
+    }
     Write-Host "`tCurrent Version: $curVerNum"
     if ($curVerNum -ne $getLatestStableVersion) {
       Write-Host "`t`tLatest *STABLE* Version: $getLatestStableVersion"
@@ -32,7 +36,11 @@ foreach ($depType in $depTypes) {
     }
     else {
       Write-Host ""
-      Write-Host "`t`tCurrent Version '$curVerNum' is the latest *PRE-RELEASE* version already"
+      if ($getLatestVersion -eq $getLatestStableVersion) {
+        Write-Host "`t`tLatest *PRE-RELEASE* Version '$getLatestVersion' is the same as latest *STABLE* version"
+      } else {
+        Write-Host "`t`tCurrent Version '$curVerNum' is the latest *PRE-RELEASE* version already"
+      }
     }
   }
   Write-Host ""
